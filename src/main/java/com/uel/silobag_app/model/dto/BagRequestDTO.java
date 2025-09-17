@@ -1,5 +1,7 @@
 package com.uel.silobag_app.model.dto;
 
+import java.sql.Date;
+
 import com.uel.silobag_app.model.Bag;
 import com.uel.silobag_app.model.enums.TipoProduto;
 
@@ -11,7 +13,11 @@ public record BagRequestDTO(
 		
 		Integer codigo,
 		
-		TipoProduto produto
+		TipoProduto produto,
+		
+		Date dataCadastro,
+		
+		OperacaoRequestDTO operacao
 		
 		) {
 	
@@ -26,7 +32,9 @@ public record BagRequestDTO(
             bag.getVolume(), 
             bag.getCapacidade(), 
             bag.getCodigo(), 
-            bag.getProduto()
+            bag.getProduto(),
+            bag.getDataCadastro(),
+            new OperacaoRequestDTO(bag.getOperacao())
         );
     }
 	

@@ -10,7 +10,9 @@ public record BagAddDTO(
 		
 		Integer codigo,
 		
-		TipoProduto produto
+		TipoProduto produto,
+		
+		Long operacaoId
 		
 		) {
 
