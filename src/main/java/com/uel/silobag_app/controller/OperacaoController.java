@@ -2,6 +2,7 @@ package com.uel.silobag_app.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,9 @@ public class OperacaoController {
 		return ResponseEntity.status(HttpStatus.OK).body(operacaoService.listar());
 	}
 	
-	@GetMapping("/buscar/{id}")
-	public ResponseEntity<OperacaoRequestDTO> buscar(@PathVariable Long id){
-		return ResponseEntity.status(HttpStatus.OK).body(operacaoService.buscar(id));
+	@GetMapping("/buscar/{uid}")
+	public ResponseEntity<OperacaoRequestDTO> buscar(@PathVariable UUID uid){
+		return ResponseEntity.status(HttpStatus.OK).body(operacaoService.buscar(uid));
 	}
 	
 	@PostMapping("/adicionar")
@@ -46,9 +47,9 @@ public class OperacaoController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(operacaoService.adicionar(o));
 	}
 	
-	@DeleteMapping("/remover/{id}")
-	public ResponseEntity<Void> remover(@PathVariable Long id) {
-		operacaoService.remover(id);
+	@DeleteMapping("/remover/{uid}")
+	public ResponseEntity<Void> remover(@PathVariable UUID uid) {
+		operacaoService.remover(uid);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 	}
 	

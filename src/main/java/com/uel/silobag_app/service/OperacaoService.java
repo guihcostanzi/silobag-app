@@ -3,6 +3,7 @@ package com.uel.silobag_app.service;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.coyote.BadRequestException;
@@ -32,9 +33,9 @@ public class OperacaoService {
 				.collect(Collectors.toList());
 	}
 	
-	public OperacaoRequestDTO buscar(Long id){
+	public OperacaoRequestDTO buscar(UUID uid){
 		return new OperacaoRequestDTO(
-				operacaoRepository.findById(id)
+				operacaoRepository.findByUid(uid)
 				.orElseThrow(() -> new NoSuchElementException("Operação não encontrada."))
 		);
 	}
@@ -49,14 +50,14 @@ public class OperacaoService {
 		
 	}
 	
-	public void remover(Long id) {
-		Operacao operacaoRemocao = operacaoRepository.findById(id)
+	public void remover(UUID uid) {
+		Operacao operacaoRemocao = operacaoRepository.findByUid(uid)
 				.orElseThrow(() -> new NoSuchElementException("Operação não encontrada."));;
 		operacaoRepository.delete(operacaoRemocao);
 	}
 	
 	public OperacaoRequestDTO atualizar(OperacaoUpdateDTO dadosAtualizados) {
-		Operacao operacaoAtualizacao = operacaoRepository.findById(dadosAtualizados.id())
+		Operacao operacaoAtualizacao = operacaoRepository.findByUid(dadosAtualizados.uid())
 				.orElseThrow(() -> new NoSuchElementException("Operação não encontrada."));
 		
 		operacaoAtualizacao.setNome(dadosAtualizados.nome());

@@ -3,6 +3,7 @@ package com.uel.silobag_app.service;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.coyote.BadRequestException;
@@ -37,9 +38,9 @@ public class BagService {
 				.collect(Collectors.toList());
 	}
 	
-	public BagRequestDTO buscar(Long id){
+	public BagRequestDTO buscar(UUID uid){
 		return new BagRequestDTO(
-				bagRepository.findById(id)
+				bagRepository.findByUid(uid)
 				.orElseThrow(() -> new NoSuchElementException("Bag não encontrada."))
 		);
 	}
@@ -67,14 +68,14 @@ public class BagService {
 		} 
 	}
 	
-	public void remover(Long id) {
-		Bag contatoRemocao = bagRepository.findById(id)
+	public void remover(UUID uid) {
+		Bag contatoRemocao = bagRepository.findByUid(uid)
 				.orElseThrow(() -> new NoSuchElementException("Bag não encontrada."));;
 		bagRepository.delete(contatoRemocao);
 	}
 	
 	public BagRequestDTO atualizar(BagUpdateDTO dadosAtualizados) {
-		Bag bagAtualizacao = bagRepository.findById(dadosAtualizados.id())
+		Bag bagAtualizacao = bagRepository.findByUid(dadosAtualizados.uid())
 				.orElseThrow(() -> new NoSuchElementException("Bag não encontrada."));
 		
 		bagAtualizacao.setVolume(dadosAtualizados.volume());
