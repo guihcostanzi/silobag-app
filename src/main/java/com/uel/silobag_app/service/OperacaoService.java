@@ -40,6 +40,11 @@ public class OperacaoService {
 	}
 	
 	public Operacao adicionar(OperacaoAddDTO dadosCadastro) throws BadRequestException, SQLIntegrityConstraintViolationException {		
+		
+		// Verificando se o nome da operação já esta cadastrado
+		if (operacaoRepository.findByNome(dadosCadastro.nome()).isPresent())
+			throw new SQLIntegrityConstraintViolationException("O nome da operação já está cadastrado.");
+		
 		return operacaoRepository.save(new Operacao(dadosCadastro));
 		
 	}

@@ -1,8 +1,10 @@
 package com.uel.silobag_app.model;
 
 import java.sql.Date;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import com.uel.silobag_app.model.dto.BagAddDTO;
 import com.uel.silobag_app.model.enums.TipoProduto;
@@ -26,6 +28,10 @@ public class Bag {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private Long id;
+	
+	@UuidGenerator
+    @Column(name = "UID")
+    private UUID uid;
 	
 	@Column(name = "VOLUME")
 	private Double volume;
@@ -60,7 +66,7 @@ public class Bag {
 		this.produto = dadosCadastro.produto();
 	}
 
-	public Bag(Long id, Double volume, Double capacidade, Integer codigo, TipoProduto produto, Date dataCadastro) {
+	public Bag(Long id, Double volume, Double capacidade, Integer codigo, TipoProduto produto, Date dataCadastro, UUID uuid) {
 		super();
 		this.id = id;
 		this.volume = volume;
@@ -68,6 +74,7 @@ public class Bag {
 		this.codigo = codigo;
 		this.produto = produto;
 		this.dataCadastro = dataCadastro;
+		this.uid = uuid;
 	}
 
 	public Long getId() {
@@ -112,6 +119,10 @@ public class Bag {
 	
 	public void setOperacao(Operacao operacao) {
 		this.operacao = operacao;
+	}
+	
+	public UUID getUid() {
+		return this.uid;
 	}
 	
 	

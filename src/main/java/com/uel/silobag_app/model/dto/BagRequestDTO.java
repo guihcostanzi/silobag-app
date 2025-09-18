@@ -1,6 +1,7 @@
 package com.uel.silobag_app.model.dto;
 
 import java.sql.Date;
+import java.util.UUID;
 
 import com.uel.silobag_app.model.Bag;
 import com.uel.silobag_app.model.enums.TipoProduto;
@@ -16,6 +17,8 @@ public record BagRequestDTO(
 		TipoProduto produto,
 		
 		Date dataCadastro,
+		
+		UUID uid,
 		
 		OperacaoRequestDTO operacao
 		
@@ -34,6 +37,7 @@ public record BagRequestDTO(
             bag.getCodigo(), 
             bag.getProduto(),
             bag.getDataCadastro(),
+            bag.getUid(),
             new OperacaoRequestDTO(bag.getOperacao())
         );
     }

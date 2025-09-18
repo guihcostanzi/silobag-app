@@ -1,8 +1,10 @@
 package com.uel.silobag_app.model;
 
 import java.sql.Date;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import com.uel.silobag_app.enums.TipoOperacao;
 import com.uel.silobag_app.model.dto.OperacaoAddDTO;
@@ -21,9 +23,13 @@ import jakarta.persistence.Table;
 public class Operacao {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private Long id;
+	
+	@UuidGenerator
+    @Column(name = "UID")
+    private UUID uid;
 	
 	@Column(name = "NOME")
 	private String nome;
@@ -45,12 +51,13 @@ public class Operacao {
 		this.tipo = operacao.tipo();
 	}
 
-	public Operacao(Long id, String nome, TipoOperacao tipo, Date dataCadastro) {
+	public Operacao(Long id, String nome, TipoOperacao tipo, Date dataCadastro, UUID uuid) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.tipo = tipo;
 		this.dataCadastro = dataCadastro;
+		this.uid = uuid;
 	}
 
 	public Long getId() {
@@ -85,7 +92,9 @@ public class Operacao {
 		this.dataCadastro = dataCadastro;
 	}
 	
-	
+	public UUID getUid() {
+		return this.uid;
+	}
 	
 	
 }

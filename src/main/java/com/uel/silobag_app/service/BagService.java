@@ -46,6 +46,10 @@ public class BagService {
 	
 	public Bag adicionar(BagAddDTO dadosCadastro) throws BadRequestException, SQLIntegrityConstraintViolationException {
 		try{
+			
+			// Verificando operação
+			if (dadosCadastro.operacaoId() == null) throw new BadRequestException("Informe uma operação.");
+			
 			// Verificando se já existe uma bag com esse código cadastrado.
 			if (bagRepository.findByCodigo(dadosCadastro.codigo()).isPresent())
 				throw new SQLIntegrityConstraintViolationException("O código da bag já está cadastrado.");

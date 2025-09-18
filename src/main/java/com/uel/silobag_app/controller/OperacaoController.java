@@ -17,44 +17,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.uel.silobag_app.model.Bag;
-import com.uel.silobag_app.model.dto.BagAddDTO;
-import com.uel.silobag_app.model.dto.BagRequestDTO;
-import com.uel.silobag_app.model.dto.BagUpdateDTO;
-import com.uel.silobag_app.service.BagService;
+import com.uel.silobag_app.model.Operacao;
+import com.uel.silobag_app.model.dto.OperacaoAddDTO;
+import com.uel.silobag_app.model.dto.OperacaoRequestDTO;
+import com.uel.silobag_app.model.dto.OperacaoUpdateDTO;
+import com.uel.silobag_app.service.OperacaoService;
 
 @RestController
-@RequestMapping("/bag")
+@RequestMapping("/operacao")
 @CrossOrigin("*")
-public class BagController {
+public class OperacaoController {
 	
 	@Autowired
-	private BagService bagService;
+	private OperacaoService operacaoService;
 	
 	@GetMapping("/listar")
-	public ResponseEntity<List<BagRequestDTO>> listar(){
-		return ResponseEntity.status(HttpStatus.OK).body(bagService.listar());
+	public ResponseEntity<List<OperacaoRequestDTO>> listar(){
+		return ResponseEntity.status(HttpStatus.OK).body(operacaoService.listar());
 	}
 	
 	@GetMapping("/buscar/{id}")
-	public ResponseEntity<BagRequestDTO> buscar(@PathVariable Long id){
-		return ResponseEntity.status(HttpStatus.OK).body(bagService.buscar(id));
+	public ResponseEntity<OperacaoRequestDTO> buscar(@PathVariable Long id){
+		return ResponseEntity.status(HttpStatus.OK).body(operacaoService.buscar(id));
 	}
 	
 	@PostMapping("/adicionar")
-	public ResponseEntity<Bag> adicionar(@RequestBody BagAddDTO b) throws BadRequestException, SQLException {
-		return ResponseEntity.status(HttpStatus.CREATED).body(bagService.adicionar(b));
+	public ResponseEntity<Operacao> adicionar(@RequestBody OperacaoAddDTO o) throws BadRequestException, SQLException {
+		return ResponseEntity.status(HttpStatus.CREATED).body(operacaoService.adicionar(o));
 	}
 	
 	@DeleteMapping("/remover/{id}")
 	public ResponseEntity<Void> remover(@PathVariable Long id) {
-		bagService.remover(id);
+		operacaoService.remover(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 	}
 	
 	@PutMapping("/atualizar")
-	public ResponseEntity<BagRequestDTO> atualizar(@RequestBody BagUpdateDTO dados) {
-		return ResponseEntity.status(HttpStatus.OK).body(bagService.atualizar(dados));
+	public ResponseEntity<OperacaoRequestDTO> atualizar(@RequestBody OperacaoUpdateDTO dados) {
+		return ResponseEntity.status(HttpStatus.OK).body(operacaoService.atualizar(dados));
 	}
 
 }

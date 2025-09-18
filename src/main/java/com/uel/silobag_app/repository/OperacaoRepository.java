@@ -11,4 +11,6 @@ import com.uel.silobag_app.model.Operacao;
 public interface OperacaoRepository extends JpaRepository<Operacao, Long> {
 	
 	Optional<Operacao> findById(Long id);
+	
+	Optional<Operacao> findByNome (String nome);
 }
