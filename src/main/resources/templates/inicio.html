@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Silo-Bag App</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" 
+          crossorigin="anonymous">
+
+    <style>
+        a,
+        a:focus,
+        a:hover {
+          color: #fff;
+        }
+        .btn-secondary,
+        .btn-secondary:hover,
+        .btn-secondary:focus {
+          color: #333;
+          text-shadow: none;
+          background-color: #fff;
+          border: .05rem solid #fff;
+        }
+        html,
+        body {
+          height: 100%;
+          /* Cor de fundo removida para dar lugar à imagem */
+          /* background-color: #333; */ 
+        }
+        body {
+          display: -ms-flexbox;
+          display: -webkit-box;
+          display: flex;
+          -ms-flex-pack: center;
+          -webkit-box-pack: center;
+          justify-content: center;
+          color: #fff;
+          text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+          /* Este box-shadow vai escurecer a imagem de fundo (overlay) */
+          box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5); 
+        }
+        .cover-container {
+          max-width: 72em;
+        }
+        .masthead {
+          margin-bottom: 2rem;
+        }
+        .masthead-brand {
+          margin-bottom: 0;
+        }
+        .nav-masthead .nav-link {
+          padding: .25rem 0;
+          font-weight: 700;
+          color: rgba(255, 255, 255, .5);
+          background-color: transparent;
+          border-bottom: .25rem solid transparent;
+        }
+        .nav-masthead .nav-link:hover,
+        .nav-masthead .nav-link:focus {
+          border-bottom-color: rgba(255, 255, 255, .25);
+        }
+        .nav-masthead .nav-link + .nav-link {
+          margin-left: 1rem;
+        }
+        .nav-masthead .active {
+          color: #fff;
+          border-bottom-color: #fff;
+        }
+        @media (min-width: 48em) {
+          .masthead-brand {
+            float: left;
+          }
+          .nav-masthead {
+            float: right;
+          }
+        }
+        .cover {
+          padding: 0 1.5rem;
+        }
+        .cover .btn-lg {
+          padding: .75rem 1.25rem;
+          font-weight: 700;
+        }
+        .mastfoot {
+          color: rgba(255, 255, 255, .5);
+        }
+
+        .bg-image {
+			background-repeat: no-repeat;
+	        background-position: center center;
+	        background-attachment: fixed;
+	        background-size: cover;
+            
+            /* Efeito blur */
+            filter: blur(5px);
+            -webkit-filter: blur(5px);
+            
+            /* Posicionamento para ficar atrás de tudo */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2; /* Atrás do conteúdo e do overlay */
+        }
+
+        /* Botão iniciar demo */
+		.btn-custom {
+           /* Estado Inicial: Transparente com borda branca */
+           background-color: rgba(255, 255, 255, 0.15); /* Fundo "meio transparente" (ajuste 0.15 como quiser) */
+           border: 2px solid #fff;                     /* Borda branca (outline) */
+           color: #fff;                                /* Texto branco */
+
+           /* Adiciona uma transição suave para o efeito */
+           transition: all 0.3s ease;
+       }
+
+       .btn-custom:hover {
+           /* Estado Hover: Preenchido de branco, com texto cinza */
+           background-color: #fff;       /* Fundo preenchido de branco */
+           color: rgb(81, 95, 102);              /* Texto na sua cor verde original */
+           border-color: #fff;           /* Borda continua branca */
+       }
+    </style>
+  </head>
+
+  <body class="text-center">
+    
+    <div class="bg-image" th:style="'background-image: url(' + @{/bg.jpg} + ');'"></div>
+
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+      
+      <header class="masthead mb-auto">
+        <div class="inner">
+          <h3 class="masthead-brand">Silo-Bag App</h3>
+          <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link active" href="#">Início</a>
+            </nav>
+        </div>
+      </header>
+
+      <main role="main" class="inner cover">
+        <h1 class="cover-heading" th:text="${message}"></h1>
+        
+        <p class="lead">
+            Silo-bags são uma solução moderna e eficiente para o armazenamento de grãos, 
+            preservando a qualidade da colheita diretamente no campo.
+            Nosso sistema monitora seus ativos em tempo real.
+        </p>
+        
+        <p class="lead">
+          <a href="#" class="btn btn-lg btn-custom">Iniciar Demonstração</a>
+        </p>
+      </main>
+
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+          <p>Silo-Bag App, desenvolvido com <a href="https://spring.io/">Spring Boot</a> e <a href="https://getbootstrap.com/">Bootstrap</a>.</p>
+        </div>
+      </footer>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" 
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" 
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" 
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" 
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" 
+            integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" 
+            crossorigin="anonymous"></script>
+  
+
+</body>
+</html>
