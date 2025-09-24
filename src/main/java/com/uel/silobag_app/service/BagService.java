@@ -51,6 +51,9 @@ public class BagService {
 			// Verificando operação
 			if (dadosCadastro.operacaoUid() == null) throw new BadRequestException("Informe uma operação.");
 			
+			if(dadosCadastro.volume() > dadosCadastro.capacidade()) 
+				throw new BadRequestException("Capacidade da bag excedida.");
+			
 			Operacao operacao = operacaoRepository.findByUid(dadosCadastro.operacaoUid())
 					.orElseThrow(() -> new BadRequestException("A operação informada não existe ou está desativada."));
 			
@@ -76,9 +79,13 @@ public class BagService {
 		bagRepository.delete(contatoRemocao);
 	}
 	
-	public BagRequestDTO atualizar(BagUpdateDTO dadosAtualizados) {
+	public BagRequestDTO atualizar(BagUpdateDTO dadosAtualizados) throws BadRequestException {
 		Bag bagAtualizacao = bagRepository.findByUid(dadosAtualizados.uid())
 				.orElseThrow(() -> new NoSuchElementException("Bag não encontrada."));
+		
+		// Verificando se o volume está dentro do limite
+		if(dadosAtualizados.volume() > bagAtualizacao.getCapacidade()) 
+			throw new BadRequestException("Capacidade da bag excedida.");
 		
 		bagAtualizacao.setVolume(dadosAtualizados.volume());
 		bagAtualizacao.setProduto(dadosAtualizados.produto());

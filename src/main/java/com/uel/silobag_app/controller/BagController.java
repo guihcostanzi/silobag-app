@@ -54,7 +54,7 @@ public class BagController {
 	}
 	
 	@PutMapping("/atualizar")
-	public ResponseEntity<BagRequestDTO> atualizar(@RequestBody BagUpdateDTO dados) {
+	public ResponseEntity<BagRequestDTO> atualizar(@RequestBody BagUpdateDTO dados) throws BadRequestException {
 		return ResponseEntity.status(HttpStatus.OK).body(bagService.atualizar(dados));
 	}
 
