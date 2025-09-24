@@ -49,14 +49,16 @@ public class BagService {
 		try{
 			
 			// Verificando operação
-			if (dadosCadastro.operacaoId() == null) throw new BadRequestException("Informe uma operação.");
+			if (dadosCadastro.operacaoUid() == null) throw new BadRequestException("Informe uma operação.");
+			
+			Operacao operacao = operacaoRepository.findByUid(dadosCadastro.operacaoUid())
+					.orElseThrow(() -> new BadRequestException("A operação informada não existe ou está desativada."));
 			
 			// Verificando se já existe uma bag com esse código cadastrado.
-			if (bagRepository.findByCodigo(dadosCadastro.codigo()).isPresent())
+			if (bagRepository.findByCodigoAndOperacao(dadosCadastro.codigo(), operacao).isPresent())
 				throw new SQLIntegrityConstraintViolationException("O código da bag já está cadastrado.");
 			
-			Operacao operacao = operacaoRepository.findById(dadosCadastro.operacaoId())
-					.orElseThrow(() -> new BadRequestException("A operação informada não existe ou está desativada."));
+			
 			
 			// Criando a bag e definindo a operação
 			Bag bag = new Bag(dadosCadastro);

@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
-import com.uel.silobag_app.enums.TipoOperacao;
 import com.uel.silobag_app.model.dto.OperacaoAddDTO;
+import com.uel.silobag_app.model.enums.TipoOperacao;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

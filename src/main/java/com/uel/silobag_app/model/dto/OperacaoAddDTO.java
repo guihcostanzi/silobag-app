@@ -1,6 +1,6 @@
 package com.uel.silobag_app.model.dto;
 
-import com.uel.silobag_app.enums.TipoOperacao;
+import com.uel.silobag_app.model.enums.TipoOperacao;
 
 public record OperacaoAddDTO(
 		

@@ -2,8 +2,8 @@ package com.uel.silobag_app.model.dto;
 
 import java.util.UUID;
 
-import com.uel.silobag_app.enums.TipoOperacao;
 import com.uel.silobag_app.model.Operacao;
+import com.uel.silobag_app.model.enums.TipoOperacao;
 
 public record OperacaoRequestDTO(
 		

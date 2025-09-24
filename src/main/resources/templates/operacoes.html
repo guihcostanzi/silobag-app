@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Silo-Bag App - Gerenciamento</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --cor-cinza-claro: #f8f9fa;
+            --cor-amarelo-claro: #fff3cd;
+            --cor-amarelo-acao: #ffc107;
+            --cor-branca: #ffffff;
+            --cor-verde: #28a745;
+            --cor-azul: #007bff;
+            --cor-vermelha: #dc3545;
+        }
+
+        body {
+            background-color: var(--cor-cinza-claro);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--cor-branca) 0%, #f1f3f4 100%);
+            border-bottom: 2px solid var(--cor-amarelo-acao);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #333 !important;
+            font-size: 1.5rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--cor-amarelo-claro) 0%, #f8f4e6 100%);
+            border-radius: 12px 12px 0 0 !important;
+            border-bottom: 2px solid var(--cor-amarelo-acao);
+            font-weight: 600;
+        }
+
+        .btn-acao-principal {
+            background: linear-gradient(135deg, var(--cor-amarelo-acao) 0%, #e6ac00 100%);
+            border: none;
+            color: #333;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-acao-principal:hover {
+            background: linear-gradient(135deg, #e6ac00 0%, #cc9900 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            color: #333;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, var(--cor-branca) 0%, #f8f9fa 100%);
+            border-left: 4px solid;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-card.operacoes { border-left-color: var(--cor-azul); }
+        .stats-card.extracao { border-left-color: var(--cor-vermelha); }
+        .stats-card.embolsamento { border-left-color: var(--cor-verde); }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .stats-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+
+        .badge-tipo {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .badge-extracao {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .badge-embolsamento {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-action {
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 2px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            transform: scale(1.1);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--cor-amarelo-acao);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0.5rem 0;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            color: var(--cor-amarelo-acao);
+            font-weight: bold;
+        }
+
+        .view-bags-btn {
+            background: linear-gradient(135deg, var(--cor-azul) 0%, #0056b3 100%);
+            border: none;
+            color: white;
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .view-bags-btn:hover {
+            background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .alert-custom {
+            border: none;
+            border-radius: 8px;
+            border-left: 4px solid var(--cor-amarelo-acao);
+        }
+
+        .uid-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand">
+            <i class="bi bi-box-seam"></i> Silo-Bag App
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <span class="navbar-text">
+                        <i class="bi bi-clock"></i> <span id="currentTime"></span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#" onclick="voltarParaOperacoes()">Operações</a></li>
+                <li class="breadcrumb-item active" aria-current="page" id="breadcrumbAtual">Dashboard</li>
+            </ol>
+        </nav>
+
+        <!-- Indicadores -->
+        <div class="row mb-4" id="indicadores">
+            <div class="col-md-4">
+                <div class="stats-card operacoes">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="stats-number text-primary" id="totalOperacoes">0</p>
+                            <p class="stats-label">Total de Operações</p>
+                        </div>
+                        <i class="bi bi-list-task text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card extracao">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="stats-number text-danger" id="totalExtracao">0</p>
+                            <p class="stats-label">Operações de Extração</p>
+                        </div>
+                        <i class="bi bi-arrow-up-circle text-danger" style="font-size: 2rem;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card embolsamento">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="stats-number text-success" id="totalEmbolsamento">0</p>
+                            <p class="stats-label">Operações de Embolsamento</p>
+                        </div>
+                        <i class="bi bi-arrow-down-circle text-success" style="font-size: 2rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Operações -->
+        <div id="telaOperacoes">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-plus-circle"></i> Nova Operação</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="formAdicionar">
+                                <div class="form-group">
+                                    <label for="nome"><i class="bi bi-tag"></i> Nome da Operação</label>
+                                    <input type="text" class="form-control" id="nome" placeholder="Ex: Safra Soja 2025" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tipo"><i class="bi bi-gear"></i> Tipo</label>
+                                    <select class="form-control" id="tipo" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="EXTRACAO">Extração</option>
+                                        <option value="EMBOLSAMENTO">Embolsamento</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-acao-principal btn-block">
+                                    <i class="bi bi-plus-lg"></i> Adicionar Operação
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5><i class="bi bi-list-ul"></i> Operações Ativas</h5>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="carregarOperacoes()">
+                                <i class="bi bi-arrow-clockwise"></i> Atualizar
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th><i class="bi bi-tag"></i> Nome</th>
+                                            <th><i class="bi bi-gear"></i> Tipo</th>
+                                            <th><i class="bi bi-tools"></i> Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabelaOperacoes">
+                                        <tr>
+                                            <td colspan="3" class="text-center">
+                                                <div class="loading-spinner"></div> Carregando...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Bolsas -->
+        <div id="telaBolsas" style="display: none;">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-plus-circle"></i> Nova Bolsa</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-custom" id="infoOperacaoAtual">
+                                <strong>Operação:</strong> <span id="nomeOperacaoAtual"></span><br>
+                                <strong>Tipo:</strong> <span id="tipoOperacaoAtual"></span><br>
+                                <strong>UID:</strong> <span id="uidOperacaoAtual" class="uid-display"></span>
+                            </div>
+                            <form id="formAdicionarBolsa">
+                                <input type="hidden" id="operacaoUidAtual">
+                                <div class="form-group">
+                                    <label for="codigo"><i class="bi bi-hash"></i> Código</label>
+                                    <input type="number" class="form-control" id="codigo" placeholder="Ex: 001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="volume"><i class="bi bi-speedometer2"></i> Volume (m³)</label>
+                                    <input type="number" step="0.01" class="form-control" id="volume" placeholder="Ex: 150.50" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="capacidade"><i class="bi bi-box"></i> Capacidade (ton)</label>
+                                    <input type="number" step="0.01" class="form-control" id="capacidade" placeholder="Ex: 200.00" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="produto"><i class="bi bi-grain"></i> Produto</label>
+                                    <select class="form-control" id="produto" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="SOJA">Soja</option>
+                                        <option value="MILHO">Milho</option>
+                                        <option value="TRIGO">Trigo</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-acao-principal btn-block">
+                                    <i class="bi bi-plus-lg"></i> Adicionar Bolsa
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5><i class="bi bi-bag"></i> Bolsas da Operação</h5>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="carregarBolsas()">
+                                <i class="bi bi-arrow-clockwise"></i> Atualizar
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th><i class="bi bi-hash"></i> Código</th>
+                                            <th><i class="bi bi-speedometer2"></i> Volume</th>
+                                            <th><i class="bi bi-box"></i> Capacidade</th>
+                                            <th><i class="bi bi-grain"></i> Produto</th>
+                                            <th><i class="bi bi-calendar"></i> Data</th>
+                                            <th><i class="bi bi-tools"></i> Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabelaBolsas">
+                                        <tr>
+                                            <td colspan="6" class="text-center">
+                                                <div class="loading-spinner"></div> Carregando...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Operação -->
+    <div class="modal fade" id="modalEditarOperacao" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: var(--cor-amarelo-claro);">
+                    <h5 class="modal-title"><i class="bi bi-pencil"></i> Editar Operação</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarOperacao">
+                        <input type="hidden" id="editOperacaoUid">
+                        <div class="form-group">
+                            <label for="editOperacaoNome">Nome da Operação</label>
+                            <input type="text" class="form-control" id="editOperacaoNome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editOperacaoTipo">Tipo</label>
+                            <select class="form-control" id="editOperacaoTipo" required>
+                                <option value="EXTRACAO">Extração</option>
+                                <option value="EMBOLSAMENTO">Embolsamento</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-acao-principal" onclick="salvarAtualizacaoOperacao()">
+                        <i class="bi bi-check-lg"></i> Salvar Mudanças
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Bolsa -->
+    <div class="modal fade" id="modalEditarBolsa" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: var(--cor-amarelo-claro);">
+                    <h5 class="modal-title"><i class="bi bi-pencil"></i> Editar Bolsa</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarBolsa">
+                        <input type="hidden" id="editBolsaUid">
+                        <div class="form-group">
+                            <label for="editBolsaVolume">Volume (m³)</label>
+                            <input type="number" step="0.01" class="form-control" id="editBolsaVolume" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editBolsaProduto">Produto</label>
+                            <select class="form-control" id="editBolsaProduto" required>
+                                <option value="SOJA">Soja</option>
+                                <option value="MILHO">Milho</option>
+                                <option value="TRIGO">Trigo</option>
+                                <option value="ARROZ">Arroz</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-acao-principal" onclick="salvarAtualizacaoBolsa()">
+                        <i class="bi bi-check-lg"></i> Salvar Mudanças
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script th:inline="javascript">
+        const contextPath = /*[[@{/}]]*/ '/';
+        const operacaoApiUrl = contextPath + 'operacao';
+        const bagApiUrl = contextPath + 'bag';
+        
+        let operacaoAtual = null;
+        let operacoes = [];
+        let bolsas = [];
+
+        // Atualizar relógio
+        function atualizarRelogio() {
+            const agora = new Date();
+            const timeString = agora.toLocaleTimeString('pt-BR');
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        // Atualizar indicadores
+        function atualizarIndicadores() {
+            const totalOperacoes = operacoes.length;
+            const totalExtracao = operacoes.filter(op => op.tipo === 'EXTRACAO').length;
+            const totalEmbolsamento = operacoes.filter(op => op.tipo === 'EMBOLSAMENTO').length;
+
+            document.getElementById('totalOperacoes').textContent = totalOperacoes;
+            document.getElementById('totalExtracao').textContent = totalExtracao;
+            document.getElementById('totalEmbolsamento').textContent = totalEmbolsamento;
+        }
+
+        // Carregar operações
+        async function carregarOperacoes() {
+            try {
+                const response = await fetch(`${operacaoApiUrl}/listar`);
+                if (!response.ok) throw new Error('Falha ao buscar dados');
+                
+                operacoes = await response.json();
+                const tabelaBody = document.getElementById('tabelaOperacoes');
+                tabelaBody.innerHTML = '';
+
+                if (operacoes.length === 0) {
+                    tabelaBody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Nenhuma operação cadastrada.</td></tr>';
+                    atualizarIndicadores();
+                    return;
+                }
+
+                operacoes.forEach(op => {
+                    const tr = document.createElement('tr');
+                    const badgeClass = op.tipo === 'EXTRACAO' ? 'badge-extracao' : 'badge-embolsamento';
+                    const tipoTexto = op.tipo === 'EXTRACAO' ? 'Extração' : 'Embolsamento';
+                    
+                    tr.innerHTML = `
+                        <td>
+                            <strong>${op.nome}</strong>
+                            <br>
+                            <button class="view-bags-btn" onclick="verBolsas('${op.uid}', '${op.nome}', '${op.tipo}')">
+                                <i class="bi bi-bag"></i> Ver Bolsas
+                            </button>
+                        </td>
+                        <td>
+                            <span class="badge badge-tipo ${badgeClass}">${tipoTexto}</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-primary btn-action" onclick="abrirModalEdicaoOperacao('${op.uid}')" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-action" onclick="removerOperacao('${op.uid}')" title="Remover">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tabelaBody.appendChild(tr);
+                });
+
+                atualizarIndicadores();
+
+            } catch (error) {
+                console.error('Erro ao carregar operações:', error);
+                document.getElementById('tabelaOperacoes').innerHTML = '<tr><td colspan="3" class="text-center text-danger">Falha ao carregar dados.</td></tr>';
+            }
+        }
+
+        // Carregar bolsas
+        async function carregarBolsas() {
+            if (!operacaoAtual) return;
+
+            try {
+                const response = await fetch(`${bagApiUrl}/listar`);
+                if (!response.ok) throw new Error('Falha ao buscar bolsas');
+                
+                const todasBolsas = await response.json();
+                bolsas = todasBolsas.filter(bolsa => bolsa.operacao.uid === operacaoAtual.uid);
+                
+                const tabelaBody = document.getElementById('tabelaBolsas');
+                tabelaBody.innerHTML = '';
+
+                if (bolsas.length === 0) {
+                    tabelaBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Nenhuma bolsa cadastrada para esta operação.</td></tr>';
+                    return;
+                }
+
+                bolsas.forEach(bolsa => {
+                    const tr = document.createElement('tr');
+                    const dataFormatada = new Date(bolsa.dataCadastro).toLocaleDateString('pt-BR');
+                    
+                    tr.innerHTML = `
+                        <td><strong>#${bolsa.codigo}</strong></td>
+                        <td>${bolsa.volume.toFixed(2)} m³</td>
+                        <td>${bolsa.capacidade.toFixed(2)} ton</td>
+                        <td>
+                            <span class="badge badge-secondary">${bolsa.produto}</span>
+                        </td>
+                        <td>${dataFormatada}</td>
+                        <td>
+                            <button class="btn btn-outline-primary btn-action" onclick="abrirModalEdicaoBolsa('${bolsa.uid}')" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-action" onclick="removerBolsa('${bolsa.uid}')" title="Remover">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tabelaBody.appendChild(tr);
+                });
+
+            } catch (error) {
+                console.error('Erro ao carregar bolsas:', error);
+                document.getElementById('tabelaBolsas').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Falha ao carregar dados.</td></tr>';
+            }
+        }
+
+        // Ver bolsas de uma operação
+        function verBolsas(uid, nome, tipo) {
+            operacaoAtual = { uid, nome, tipo };
+            
+            document.getElementById('nomeOperacaoAtual').textContent = nome;
+            document.getElementById('tipoOperacaoAtual').textContent = tipo === 'EXTRACAO' ? 'Extração' : 'Embolsamento';
+            document.getElementById('uidOperacaoAtual').textContent = uid;
+            
+            // Usar o UID da operação no campo hidden
+            document.getElementById('operacaoUidAtual').value = uid;
+            
+            document.getElementById('telaOperacoes').style.display = 'none';
+            document.getElementById('telaBolsas').style.display = 'block';
+            document.getElementById('breadcrumbAtual').textContent = `Bolsas - ${nome}`;
+            
+            carregarBolsas();
+        }
+
+        // Voltar para operações
+        function voltarParaOperacoes() {
+            operacaoAtual = null;
+            document.getElementById('telaBolsas').style.display = 'none';
+            document.getElementById('telaOperacoes').style.display = 'block';
+            document.getElementById('breadcrumbAtual').textContent = 'Dashboard';
+        }
+
+        // Adicionar operação
+        document.getElementById('formAdicionar').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const nome = document.getElementById('nome').value;
+            const tipo = document.getElementById('tipo').value;
+
+            try {
+                const response = await fetch(`${operacaoApiUrl}/adicionar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, tipo })
+                });
+
+                if (response.ok) {
+                    carregarOperacoes();
+                    this.reset();
+                    alert('Operação adicionada com sucesso!');
+                } else {
+                    const errorData = await response.text();
+                    console.error('Erro do servidor:', errorData);
+                    alert('Erro ao adicionar operação.');
+                }
+            } catch (error) {
+                console.error('Erro ao adicionar:', error);
+                alert('Erro de conexão ao adicionar.');
+            }
+        });
+
+        // Adicionar bolsa
+        document.getElementById('formAdicionarBolsa').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const codigo = parseInt(document.getElementById('codigo').value);
+            const volume = parseFloat(document.getElementById('volume').value);
+            const capacidade = parseFloat(document.getElementById('capacidade').value);
+            const produto = document.getElementById('produto').value;
+            const operacaoUid = document.getElementById('operacaoUidAtual').value; // Agora é o UID
+
+            console.log('Dados da bolsa a serem enviados:', {
+                codigo, 
+                volume, 
+                capacidade, 
+                produto, 
+                operacaoUid
+            });
+
+            try {
+                const response = await fetch(`${bagApiUrl}/adicionar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        codigo, 
+                        volume, 
+                        capacidade, 
+                        produto, 
+                        operacaoUid // Enviando o UID como string
+                    })
+                });
+
+                if (response.ok) {
+                    carregarBolsas();
+                    this.reset();
+                    alert('Bolsa adicionada com sucesso!');
+                } else {
+                    const errorData = await response.text();
+                    console.error('Erro do servidor:', errorData);
+                    alert('Erro ao adicionar bolsa. Verifique os dados e tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro ao adicionar bolsa:', error);
+                alert('Erro de conexão ao adicionar bolsa.');
+            }
+        });
+
+        // Remover operação
+        async function removerOperacao(uid) {
+            if (!confirm('Tem certeza que deseja remover esta operação? Todas as bolsas associadas também serão removidas.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${operacaoApiUrl}/remover/${uid}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    carregarOperacoes();
+                    alert('Operação removida com sucesso!');
+                } else {
+                    alert('Erro ao remover operação.');
+                }
+            } catch (error) {
+                console.error('Erro ao remover:', error);
+                alert('Erro de conexão ao remover.');
+            }
+        }
+
+        // Remover bolsa
+        async function removerBolsa(uid) {
+            if (!confirm('Tem certeza que deseja remover esta bolsa?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${bagApiUrl}/remover/${uid}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    carregarBolsas();
+                    alert('Bolsa removida com sucesso!');
+                } else {
+                    alert('Erro ao remover bolsa.');
+                }
+            } catch (error) {
+                console.error('Erro ao remover bolsa:', error);
+                alert('Erro de conexão ao remover.');
+            }
+        }
+
+        // Abrir modal de edição de operação
+        async function abrirModalEdicaoOperacao(uid) {
+            try {
+                const response = await fetch(`${operacaoApiUrl}/buscar/${uid}`);
+                if (!response.ok) throw new Error('Falha ao buscar operação');
+
+                const operacao = await response.json();
+                
+                document.getElementById('editOperacaoUid').value = operacao.uid;
+                document.getElementById('editOperacaoNome').value = operacao.nome;
+                document.getElementById('editOperacaoTipo').value = operacao.tipo;
+
+                $('#modalEditarOperacao').modal('show');
+
+            } catch (error) {
+                console.error('Erro ao buscar para edição:', error);
+                alert('Não foi possível carregar os dados para edição.');
+            }
+        }
+
+        // Salvar atualização de operação
+        async function salvarAtualizacaoOperacao() {
+            const uid = document.getElementById('editOperacaoUid').value;
+            const nome = document.getElementById('editOperacaoNome').value;
+            const tipoOperacao = document.getElementById('editOperacaoTipo').value;
+
+            try {
+                const response = await fetch(`${operacaoApiUrl}/atualizar`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid, nome, tipoOperacao })
+                });
+
+                if (response.ok) {
+                    $('#modalEditarOperacao').modal('hide');
+                    carregarOperacoes();
+                    alert('Operação atualizada com sucesso!');
+                } else {
+                    alert('Erro ao atualizar operação.');
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar:', error);
+                alert('Erro de conexão ao atualizar.');
+            }
+        }
+
+        // Abrir modal de edição de bolsa
+        async function abrirModalEdicaoBolsa(uid) {
+            try {
+                const response = await fetch(`${bagApiUrl}/buscar/${uid}`);
+                if (!response.ok) throw new Error('Falha ao buscar bolsa');
+
+                const bolsa = await response.json();
+                
+                document.getElementById('editBolsaUid').value = bolsa.uid;
+                document.getElementById('editBolsaVolume').value = bolsa.volume;
+                document.getElementById('editBolsaProduto').value = bolsa.produto;
+
+                $('#modalEditarBolsa').modal('show');
+
+            } catch (error) {
+                console.error('Erro ao buscar bolsa para edição:', error);
+                alert('Não foi possível carregar os dados para edição.');
+            }
+        }
+
+        // Salvar atualização de bolsa
+        async function salvarAtualizacaoBolsa() {
+            const uid = document.getElementById('editBolsaUid').value;
+            const volume = parseFloat(document.getElementById('editBolsaVolume').value);
+            const produto = document.getElementById('editBolsaProduto').value;
+
+            try {
+                const response = await fetch(`${bagApiUrl}/atualizar`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid, volume, produto })
+                });
+
+                if (response.ok) {
+                    $('#modalEditarBolsa').modal('hide');
+                    carregarBolsas();
+                    alert('Bolsa atualizada com sucesso!');
+                } else {
+                    alert('Erro ao atualizar bolsa.');
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar bolsa:', error);
+                alert('Erro de conexão ao atualizar.');
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarOperacoes();
+            atualizarRelogio();
+            setInterval(atualizarRelogio, 1000);
+        });
+
+    </script>
+</body>
+</html>

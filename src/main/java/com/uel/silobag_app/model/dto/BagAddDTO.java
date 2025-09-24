@@ -1,5 +1,7 @@
 package com.uel.silobag_app.model.dto;
 
+import java.util.UUID;
+
 import com.uel.silobag_app.model.enums.TipoProduto;
 
 public record BagAddDTO(
@@ -12,7 +14,7 @@ public record BagAddDTO(
 		
 		TipoProduto produto,
 		
-		Long operacaoId
+		UUID operacaoUid
 		
 		) {
 
