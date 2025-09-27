@@ -40,6 +40,16 @@ public class BagService {
 		);
 	}
 	
+	public List<BagRequestDTO> buscarPorFiltros(String busca) {
+				
+		List<Bag> l = bagRepository.findByFiltros(busca)
+				.orElseThrow(() -> new NoSuchElementException("Bag não encontrada."));
+		
+		return l.stream()
+		.map(bag -> new BagRequestDTO(bag))
+		.collect(Collectors.toList());
+	}
+	
 	public Bag adicionar(BagAddDTO dadosCadastro) throws BadRequestException, SQLIntegrityConstraintViolationException {
 		try{
 			

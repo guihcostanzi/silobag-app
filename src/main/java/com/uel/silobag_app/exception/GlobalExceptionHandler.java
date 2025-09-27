@@ -8,6 +8,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -74,6 +75,20 @@ public class GlobalExceptionHandler {
 		
 	}
 	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErroGenerico> methodArgumentoNotValidException(MethodArgumentNotValidException e, HttpServletRequest request){
+		
+		ErroGenerico err = new ErroGenerico();
+		err.setTimestamp(Instant.now());
+		err.setPath(request.getRequestURI());
+		err.setError("Erro durante a execucação do programa.");
+		err.setMessage(e.getMessage());
+		err.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		
+		return ResponseEntity.status(err.getStatus()).body(err);
+		
+	}
+	
 	@ExceptionHandler(RuntimeException.class)
 	public ResponseEntity<ErroGenerico> runtimeExceptionHandler(RuntimeException e, HttpServletRequest request){
 		
@@ -87,5 +102,7 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(err.getStatus()).body(err);
 		
 	}
+	
+	
 	
 }
