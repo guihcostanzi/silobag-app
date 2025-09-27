@@ -18,10 +18,7 @@ public record BagRequestDTO(
 		
 		Date dataCadastro,
 		
-		UUID uid,
-		
-		OperacaoRequestDTO operacao
-		
+		UUID uid
 		) {
 	
 	
@@ -37,8 +34,7 @@ public record BagRequestDTO(
             bag.getCodigo(), 
             bag.getProduto(),
             bag.getDataCadastro(),
-            bag.getUid(),
-            new OperacaoRequestDTO(bag.getOperacao())
+            bag.getUid()
         );
     }
 	

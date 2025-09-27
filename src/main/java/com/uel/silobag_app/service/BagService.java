@@ -11,22 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.uel.silobag_app.model.Bag;
-import com.uel.silobag_app.model.Operacao;
 import com.uel.silobag_app.model.dto.BagAddDTO;
 import com.uel.silobag_app.model.dto.BagRequestDTO;
 import com.uel.silobag_app.model.dto.BagUpdateDTO;
 import com.uel.silobag_app.repository.BagRepository;
-import com.uel.silobag_app.repository.OperacaoRepository;
 
 @Service
 public class BagService {
 	
 	@Autowired
 	private BagRepository bagRepository;
-	
-	@Autowired
-	private OperacaoRepository operacaoRepository;
-	
+
 	public List<BagRequestDTO> listar(){
 		// Retorna todo o banco de dados de bags
 		
@@ -48,24 +43,16 @@ public class BagService {
 	public Bag adicionar(BagAddDTO dadosCadastro) throws BadRequestException, SQLIntegrityConstraintViolationException {
 		try{
 			
-			// Verificando operação
-			if (dadosCadastro.operacaoUid() == null) throw new BadRequestException("Informe uma operação.");
-			
 			if(dadosCadastro.volume() > dadosCadastro.capacidade()) 
 				throw new BadRequestException("Capacidade da bag excedida.");
-			
-			Operacao operacao = operacaoRepository.findByUid(dadosCadastro.operacaoUid())
-					.orElseThrow(() -> new BadRequestException("A operação informada não existe ou está desativada."));
+	
 			
 			// Verificando se já existe uma bag com esse código cadastrado.
-			if (bagRepository.findByCodigoAndOperacao(dadosCadastro.codigo(), operacao).isPresent())
+			if (bagRepository.findByCodigo(dadosCadastro.codigo()).isPresent())
 				throw new SQLIntegrityConstraintViolationException("O código da bag já está cadastrado.");
 			
-			
-			
-			// Criando a bag e definindo a operação
+			// Criando a bag
 			Bag bag = new Bag(dadosCadastro);
-			bag.setOperacao(operacao);
 			
 			return bagRepository.save(bag);
 		} catch(IllegalArgumentException e) {

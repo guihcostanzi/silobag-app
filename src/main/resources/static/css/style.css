@@ -1,0 +1,145 @@
+/* 1. Importação de Fonte e Variáveis de Cor */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+    --primary-color: #FFC20E;
+    --primary-hover: #FFC20E;
+    --danger-color: #dc3545;
+    --danger-hover: #c82333;
+    --background-gradient: linear-gradient(to top right, #f8f9fa, #e9ecef);
+    --card-bg: #ffffff;
+    --text-color: #495057;
+    --header-bg: #f1f3f5;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+}
+
+/* 2. Estilos Globais */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--background-gradient);
+    color: var(--text-color);
+}
+
+/* 3. Animação de Entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 4. Customização dos Componentes */
+.navbar {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.6s ease-out;
+}
+
+.card-body {
+    background-color: var(--card-bg) !important;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+}
+
+h2 {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Adiciona espaço entre as linhas */
+}
+
+.table thead th {
+    background-color: var(--header-bg);
+    color: var(--text-color);
+    font-weight: 500;
+    border: none;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.table tbody tr:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+
+.table td, .table th {
+    border: none;
+    vertical-align: middle;
+}
+
+/* Cantos arredondados para a primeira e última célula */
+.table td:first-child, .table th:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.table td:last-child, .table th:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.btn {
+    font-weight: 500 !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    padding: 0.5rem 1rem !important;
+}
+
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    transform: translateY(-2px) !important;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+.btn-danger:hover {
+    background-color: var(--danger-hover);
+    border-color: var(--danger-hover);
+    transform: translateY(-2px);
+}
+
+.modal-content {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.modal-header {
+    background-color: var(--header-bg);
+    border-bottom: none;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+
+.modal-header .modal-title {
+    font-weight: 600;
+}

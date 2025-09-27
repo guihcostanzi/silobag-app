@@ -16,8 +16,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -45,11 +43,6 @@ public class Bag {
 	@Column(name = "PRODUTO")
 	@Enumerated(EnumType.STRING)
 	private TipoProduto produto;
-	
-	
-	@ManyToOne
-	@JoinColumn(name = "OPERACAO_ID")
-	private Operacao operacao;
 	
 	@Column(name = "DATA_CADASTRO")
 	@CreationTimestamp
@@ -111,14 +104,6 @@ public class Bag {
 
 	public Date getDataCadastro() {
 		return dataCadastro;
-	}
-	
-	public Operacao getOperacao() {
-		return this.operacao;
-	}
-	
-	public void setOperacao(Operacao operacao) {
-		this.operacao = operacao;
 	}
 	
 	public UUID getUid() {

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bag - Formulário</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{css/style.css}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/bags}">Gerenciamento de Bags</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/bags}">Lista</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/bags/novo}">Cadastro Bag</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-8 mx-auto">
+            <div class="card mt-4">
+                <div class="card-body bg-body-secondary">
+                    <h2 class="text-center mb-4" th:text="${bagUpdateDto != null ? 'Editar Bag' : 'Nova Bag'}"></h2>
+
+                    <form th:if="${bagUpdateDto == null}"
+                          th:action="@{/bags}" method="post" th:object="${bagAddDto}"
+                          class="col-md-8 mx-auto mt-4">
+
+                        <div class="mb-3">
+                            <label for="codigo" class="form-label"><strong>Código*:</strong></label>
+                            <input th:field="*{codigo}" id="codigo" type="number" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="capacidade" class="form-label"><strong>Capacidade (m³)*:</strong></label>
+                            <input th:field="*{capacidade}" id="capacidade" type="number" step="0.01" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="volume" class="form-label"><strong>Volume Inicial (m³)*:</strong></label>
+                            <input th:field="*{volume}" id="volume" type="number" step="0.01" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="produto" class="form-label"><strong>Produto*:</strong></label>
+                            <select th:field="*{produto}" id="produto" class="form-select" required>
+                                <option value="">Selecione um produto</option>
+                                <option th:each="tipo : ${T(com.uel.silobag_app.model.enums.TipoProduto).values()}"
+                                        th:value="${tipo}" th:text="${tipo}"></option>
+                            </select>
+                        </div>
+
+                        <div class="small mb-3"><p class="form-text">* Campos obrigatórios</p></div>
+
+                        <div class="d-flex gap-2 float-end">
+                            <a th:href="@{/bags}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-success">Cadastrar</button>
+                        </div>
+                    </form>
+
+                    <form th:if="${bagUpdateDto != null}"
+                          th:action="@{/bags/{uid}(uid=${bagUpdateDto.uid})}"
+                          method="post" th:object="${bagUpdateDto}"
+                          class="col-md-8 mx-auto mt-4">
+
+                        <div class="mb-3">
+                             <label class="form-label"><strong>Código:</strong></label>
+                             <input type="text" class="form-control" th:value="${bagCodigo}" readonly disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Capacidade (m³):</strong></label>
+                            <input type="text" class="form-control" th:value="${bagCapacidade}" readonly disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit-volume" class="form-label"><strong>Volume (m³)*:</strong></label>
+                            <input th:field="*{volume}" id="edit-volume" type="number" step="0.01" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit-produto" class="form-label"><strong>Produto*:</strong></label>
+                            <select th:field="*{produto}" id="edit-produto" class="form-select" required>
+                                <option th:each="tipo : ${T(com.uel.silobag_app.model.enums.TipoProduto).values()}"
+                                        th:value="${tipo}" th:text="${tipo}"></option>
+                            </select>
+                        </div>
+                        
+                        <div class="small mb-3"><p class="form-text">* Campos obrigatórios</p></div>
+
+                        <div class="d-flex gap-2 float-end">
+                            <a th:href="@{/bags}" class="btn btn-secondary">Cancelar</a>
+							<input type="hidden" name="_method" value="put"/>
+                            <button type="submit" class="btn btn-success me-1">Atualizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
