@@ -22,6 +22,7 @@ import com.uel.silobag_app.model.dto.BagAddDTO;
 import com.uel.silobag_app.model.dto.BagUpdateDTO;
 import com.uel.silobag_app.service.BagService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -32,14 +33,20 @@ public class BagViewController {
     private BagService bagService;
 
     @GetMapping
-    public String listarBags(@RequestParam(required = false) String busca, Model model) {
-        if (busca != null && !busca.trim().isEmpty()) {
-            model.addAttribute("bags", bagService.buscarPorFiltros(busca));
-        } else {
-            model.addAttribute("bags", bagService.listar());
+    public String listarBags(@RequestParam(required = false) String busca, Model model, HttpSession session) {
+    	
+        String buscaAtr = busca != null ? busca : (String) session.getAttribute("buscaCache");
+        
+        session.setAttribute("buscaCache", busca);
+    	
+        if (buscaAtr != null && !buscaAtr.trim().isEmpty()) {
+            model.addAttribute("bags", bagService.buscarPorFiltros(buscaAtr));
         }
-        model.addAttribute("busca", busca);
-        return "bags/lista";
+       else {
+	        model.addAttribute("bags", bagService.listar());
+	    }
+	    model.addAttribute("busca", buscaAtr);
+	    return "bags/lista";
     }
 
     @GetMapping("/novo")
